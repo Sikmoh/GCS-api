@@ -1,0 +1,636 @@
+openapi: 3.0.0
+
+info:
+  title: "{{title}}"
+  version: "1.0.0"
+
+# Avoid having a definitive base path here. Set the path in the actual paths - facilitate versions
+# Example v1.0.0/login and v1.0.2 can both be specified
+
+servers:
+  - url: http://127.0.0.1:5003/
+    description: relative path example
+
+paths:
+  # -----------------------------------------------
+  # Facts paths - REQUESTS
+  # -----------------------------------------------
+
+  /connect:
+    post:
+      summary: Start socket server
+      tags:
+        - Connect
+      description: >
+        Required Headers:
+
+          Authorization request header
+
+            Bearer Valid Basic Access Token
+
+        Errors:
+
+          token-invalid, 401
+          authorisation-required, 401
+          not-found, 404
+
+      operationId: connect.endpoints.get_connection
+      requestBody:
+        description: Connection Data
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Connect"
+
+      responses:
+        "200":
+          description: Initiates the socket sever
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+      security:
+        - jwt: [ ]
+
+
+  /command:
+    post:
+      summary: Send command to drone
+      tags:
+        - Command
+      description: >
+        Required Headers:
+
+          Authorization request header
+
+            Bearer Valid Basic Access Token
+
+        Errors:
+
+          token-invalid, 401
+          authorisation-required, 401
+          not-found, 404
+
+      operationId: command.endpoints.get_command
+      requestBody:
+        description: Command Data
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Commands"
+
+      responses:
+        "200":
+          description: Sends command to the drones
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+      security:
+        - jwt: [ ]
+
+
+  /select-drone:
+    post:
+      summary: Send command to drone
+      tags:
+        - Select-drone
+      description: >
+        Required Headers:
+
+          Authorization request header
+
+            Bearer Valid Basic Access Token
+
+        Errors:
+
+          token-invalid, 401
+          authorisation-required, 401
+          not-found, 404
+
+      operationId: select_drone.endpoints.select_drone
+      requestBody:
+        description: Drone Data
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Select"
+
+      responses:
+        "200":
+          description: Sends command to the drones
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+      security:
+        - jwt: [ ]
+
+  /all_drones:
+    get:
+      summary: Returns the number of drones connected to the server
+      tags:
+        - All drones
+      description: >
+        Required Headers:
+
+          Authorization request header
+
+            Bearer Valid Basic Access Token
+
+        Errors:
+
+          token-invalid, 401
+          authorisation-required, 401
+          not-found, 404
+
+      operationId: all_drones.endpoints.get_alldrones
+
+
+      responses:
+        "200":
+          description: Returns a list of the number of drones connected to the server
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+      security:
+        - jwt: [ ]
+
+  /recv_telemetry:
+    get:
+      summary: Returns a list of telemetry data from drones
+      tags:
+        - Telemetry
+      description: >
+
+        Errors:
+          not-found, 404
+
+      operationId: recv_telemetry.endpoints.recv_telemetry
+      responses:
+        "200":
+          description: Returns a list of telemetry data from drones
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+
+
+  /read_telemetry:
+    get:
+      summary: Returns a list of telemetry data from drones
+      tags:
+        - Telemetry
+      description: >
+        Required Headers:
+
+          Authorization request header
+
+            Bearer Valid Basic Access Token
+
+        Errors:
+
+          token-invalid, 401
+          authorisation-required, 401
+          not-found, 404
+
+      operationId: recv_telemetry.endpoints.read_telemetry
+      responses:
+        "200":
+          description: Returns a list of telemetry data from drones
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+      security:
+        - jwt: [ ]
+
+  /upload:
+    post:
+      summary: Uploads a file
+      tags:
+        - Uploads
+      description: >
+        Required Headers:
+
+          Authorization request header
+
+            Bearer Valid Basic Access Token
+
+        Errors:
+
+          token-invalid, 401
+          authorisation-required, 401
+          not-found, 404
+
+      operationId: uploads.endpoints.upload
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                fileName:
+                  type: string
+                  format: binary
+
+      responses:
+        "200":
+          description: Uploads a path and Config file
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+      security:
+        - jwt: [ ]
+
+
+  /signup:
+    post:
+      summary: Create a new user
+      tags:
+        - Users
+      description: >
+
+        Errors:
+
+            password-invalid, 400
+            email-invalid, 400
+            user-already-exists, 400
+            unsupported media type, 415
+
+      operationId: users.endpoints.signup
+      requestBody:
+        description: Signup Data
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSignup"
+
+      responses:
+        "200":
+          description: Returns a success Response.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /login:
+    post:
+      summary: Login with user's credentials
+      tags:
+        - Users
+      description: >
+
+        Errors:
+
+            not-found, 404
+            password-invalid, 400
+            email-invalid, 400
+            account-disabled, 400
+
+      operationId: users.endpoints.login
+      requestBody:
+        description: Login Data
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Credentials"
+
+      responses:
+        "200":
+          description: Returns a JWT
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserLoginResponse"
+
+  /logout:
+    post:
+      summary: Logout
+      tags:
+        - Users
+      description: >
+
+        Required Headers:
+
+          Authorization request header
+
+            Bearer Valid Token
+
+        Errors:
+
+            'token-invalid', 401
+            'authorisation-required', 401
+            'User NOT logged out - problem accessing token in request', 400
+
+      operationId: users.endpoints.logout
+      responses:
+        "200":
+          description: Returns 'ok' or an Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+      security:
+        - jwt: [ ]
+
+  /email_verification:
+    get:
+      summary: Verifies user's email
+      tags:
+        - Users
+      description: >
+
+        Verifies user's email using an email-token generated when signing-up the user
+
+        Errors:
+
+            'token-invalid', 401
+            'authorisation-required', 401
+
+            'user-not-found', 404
+
+      operationId: users.endpoints.email_verification
+      parameters:
+        - name: token
+          description: Email verification token generated at sign-up time
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns OK
+
+  /generate_tokens:
+    get:
+      summary: Generates new user access and refresh tokens
+      tags:
+        - Users
+      description: >
+
+        Required Headers:
+
+          Authorization request header
+            Bearer Valid Basic Access token
+
+        Errors:
+
+          'token-invalid', 401
+          'authorisation-required', 401
+          'user-not-found', 404
+
+      operationId: users.endpoints.generate_new_tokens
+      parameters:
+        - name: old_access_token
+          description: The old access token of the user
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns a new access token (token) and a new refresh token (refresh_token)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserTokens"
+
+      security:
+        - jwt_refresh: [ ]
+
+  /weather:
+    get:
+      summary: Get weather info
+      tags:
+        - Weather
+      description: >
+        Required Headers:
+
+          Authorization request header
+
+            Bearer Valid Basic Access Token
+
+        Errors:
+
+          token-invalid, 401
+          authorisation-required, 401
+          not-found, 404
+
+      operationId: weather.endpoints.get_weather
+      parameters:
+        - name: city
+          description: location
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: units
+          description: units of measurement default:metric
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: appid
+          description: API key
+          in: query
+          required: true
+          schema:
+            type: string
+
+      responses:
+        "200":
+          description: Returns weather information for an area
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Weather"
+
+      security:
+        - jwt: [ ]
+
+# -----------------------------------------------
+# COMPONENTS
+# -----------------------------------------------
+
+components:
+  securitySchemes:
+    jwt:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: auth.endpoints.decode_token
+
+    jwt_refresh:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      x-bearerInfoFunc: auth.endpoints.decode_refresh_token
+
+
+  schemas:
+  # -----------------------------------------------
+  # SCHEMAS
+  # -----------------------------------------------
+    Connect:
+      required:
+        - connect
+      properties:
+        connect:
+          type: integer
+          description: Specify number of drones
+
+
+    Select:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Commands"
+        - $ref: "#/components/schemas/Drone_id"
+
+    Commands:
+      required:
+        - command
+      properties:
+        command:
+          type: string
+          description: Let the drone perform specific task
+
+
+    Drone_id:
+      required:
+        - drone_id
+      properties:
+        drone_id:
+          type: integer
+          description: IP of drone to send command to
+
+    Weather:
+      properties:
+        coord:
+          description: GPS cordinates of location
+          type: string
+        weather:
+          description: weather data
+          type: string
+        base:
+          description: weather stations
+          type: string
+        main:
+          description: temperature info
+          type: string
+        visibility:
+          description: how far you can see
+          type: string
+        wind:
+          description: wind data
+          type: string
+        clouds:
+          description: cloud data
+          type: string
+        sys:
+          description: general info
+          type: string
+
+
+
+    StatusOk:
+      type: string
+      description: API call success
+      default: ok
+
+    SuccessResponse:
+      type: object
+      properties:
+        status:
+          $ref: "#/components/schemas/StatusOk"
+
+## -----------------------------------------------
+##  User REQUEST SCHEMA
+## -----------------------------------------------
+#
+    UserID:
+      required:
+        - user_id
+      properties:
+        user_id:
+          type: integer
+          description: User ID
+
+    User:
+      allOf:
+        - $ref: "#/components/schemas/Email"
+        - $ref: "#/components/schemas/UserID"
+
+    UserSignup:
+      allOf:
+        - $ref: "#/components/schemas/AccessRole"
+        - $ref: "#/components/schemas/Credentials"
+
+    AccessRole:
+      properties:
+        access_role:
+          description: Access role of user
+          type: string
+          enum:
+            - admin
+            - basic
+          default: basic
+
+    Credentials:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Password"
+        - $ref: "#/components/schemas/Email"
+
+    Email:
+      required:
+        - email
+      properties:
+        email:
+          description: Email Address
+          type: string
+          pattern: ([-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?(\.[0-9A-Za-z]([0-9A-Za-z-]{0,61}[0-9A-Za-z])?)+
+
+    Password:
+      required:
+        - password
+      properties:
+        password:
+          description: Password
+          type: string
+          pattern: (?=\S{8,32})(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[0-9])(?=\S*)(?<!\S)\S{8,32}(?=\s|\Z)
+
+    UserLoginResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/UserTokens"
+        - $ref: "#/components/schemas/User"
+
+  # -----------------------------------------------
+  #  AUTH TOKEN RESPONSE SCHEMAS
+  # -----------------------------------------------
+
+    UserTokens:
+      type: object
+      required:
+        - token
+        - refresh_token
+      properties:
+        token:
+          type: string
+          format: byte
+          description: User's API calls token
+        refresh_token:
+          type: string
+          format: byte
+          description: User's refresh token
