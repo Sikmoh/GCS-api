@@ -16,7 +16,7 @@ paths:
   # Drone paths - REQUESTS
   # -----------------------------------------------
 
-  /connect:
+  /api/v1/connect:
     post:
       summary: Start socket server
       tags:
@@ -54,7 +54,7 @@ paths:
         - jwt: [ ]
 
 
-  /command:
+  /api/v1/command:
     post:
       summary: Send command to drone
       tags:
@@ -91,8 +91,45 @@ paths:
       security:
         - jwt: [ ]
 
+  /api/v1/take_off:
+    post:
+      summary: Send command to drone
+      tags:
+        - Command
+      description: >
+        Required Headers:
 
-  /select-drone:
+          Authorization request header
+
+            Bearer Valid Basic Access Token
+
+        Errors:
+
+          token-invalid, 401
+          authorisation-required, 401
+          not-found, 404
+
+      operationId: command.endpoints.take_off
+      requestBody:
+        description: Command Data
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Commands"
+
+      responses:
+        "200":
+          description: Sends command to the drones
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+      security:
+        - jwt: [ ]
+
+
+  /api/v1/select_drone:
     post:
       summary: Send command to drone
       tags:
@@ -129,7 +166,7 @@ paths:
       security:
         - jwt: [ ]
 
-  /all_drones:
+  /api/v1/all_drones:
     get:
       summary: Returns the number of drones connected to the server
       tags:
@@ -161,8 +198,8 @@ paths:
       security:
         - jwt: [ ]
 
-  /recv_telemetry:
-    get:
+  /api/v1/recv_telemetry:
+    post:
       summary: Returns a list of telemetry data from drones
       tags:
         - Telemetry
@@ -182,7 +219,7 @@ paths:
 
 
 
-  /read_telemetry:
+  /api/v1/read_telemetry:
     get:
       summary: Returns a list of telemetry data from drones
       tags:
@@ -212,7 +249,7 @@ paths:
       security:
         - jwt: [ ]
 
-  /upload:
+  /api/v1/upload:
     post:
       summary: Uploads a file
       tags:
@@ -253,7 +290,33 @@ paths:
         - jwt: [ ]
 
 
-  /signup:
+  /api/v1/download:
+    get:
+      summary: Downloads json path file
+      tags:
+        - Uploads
+      description: >
+
+
+        Errors:
+          not-found, 404
+
+      operationId: uploads.endpoints.download
+
+
+      responses:
+        "200":
+          description: Downloads a json path file
+          content:
+            application/json:
+              schema:
+                type: string
+                $ref: "#/components/schemas/SuccessResponse"
+
+
+
+
+  /api/v1/signup:
     post:
       summary: Create a new user
       tags:
@@ -283,9 +346,9 @@ paths:
               schema:
                 $ref: "#/components/schemas/SuccessResponse"
 
-  /login:
+  /api/v1/login:
     post:
-      summary: Login with user's credentials
+      summary: Login with users credentials
       tags:
         - Users
       description: >
@@ -313,7 +376,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/UserLoginResponse"
 
-  /logout:
+
+  /api/v1/logout:
     post:
       summary: Logout
       tags:
@@ -344,7 +408,7 @@ paths:
       security:
         - jwt: [ ]
 
-  /email_verification:
+  /api/v1/email_verification:
     get:
       summary: Verifies user's email
       tags:
@@ -372,7 +436,7 @@ paths:
         "200":
           description: Returns OK
 
-  /generate_tokens:
+  /api/v1/generate_tokens:
     get:
       summary: Generates new user access and refresh tokens
       tags:
@@ -409,7 +473,7 @@ paths:
       security:
         - jwt_refresh: [ ]
 
-  /weather:
+  /api/v1/weather:
     get:
       summary: Get weather info
       tags:
@@ -429,7 +493,13 @@ paths:
 
       operationId: weather.endpoints.get_weather
       parameters:
-        - name: city
+        - name: lat
+          description: location
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: lon
           description: location
           in: query
           required: true
@@ -495,7 +565,7 @@ components:
       type: object
       allOf:
         - $ref: "#/components/schemas/Commands"
-        - $ref: "#/components/schemas/Drone_id"
+        - $ref: "#/components/schemas/Id"
 
     Commands:
       required:
@@ -506,7 +576,7 @@ components:
           description: Let the drone perform specific task
 
 
-    Drone_id:
+    Id:
       required:
         - drone_id
       properties:

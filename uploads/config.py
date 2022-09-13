@@ -1,4 +1,4 @@
-drone = {'number': 1, 'alt': 30}
+drone = {'number': 1, 'alt': '30'}
 
 
 SMTP = {

@@ -25,8 +25,10 @@ class Weather:
         if resp.status != 200:
             error = f"problem with url {url}"
             raise ApiError(message=error, status_code=resp.status)
-
+        # import pdb;
+        # pdb.set_trace()
         data = await resp.json(content_type=None)
+        print(data)
         print(f"Received data for {url}")
         # Put the result's data on the end of the list
         self.weather_data.append(data)
@@ -51,35 +53,35 @@ class Weather:
             # waits for asyncio.gather() to be completed, required because we want to sort when all data has arrived
             await asyncio.gather(*tasks, return_exceptions=True)
 
-    def request_data_async(self, query, city=None, units=None, appid=None):
+    def request_data_async(self, query, lat=None, lon=None, units=None, appid=None):
         """
             This method formats n number of urls with the parameter 'query'
             param: query - the api query parameter
-            param: city: location
-            param: units: measurement unit
+            param: lat: location
+            param: units: measurement unitS
             param: appid: API KEY 
         """
         # Create the initial url
         urls = []
         urls_append = urls.append
 
-        if city:
-            urls_append(f"{URL}{query}?q={city}&units={units}&appid={appid}")
+        if lat:
+            urls_append(f"{URL}{query}?lat={lat}&lon={lon}&units={units}&appid={appid}")
         else:
             urls.append(f"{URL}{query}/")
 
         # Call the api query function
         asyncio.run(self.api_query(urls))
 
-    def request_data_sync(self, query, city=None, units=None, appid=None):
+    def request_data_sync(self, query, lat=None, lon=None, units=None, appid=None):
         """
             Request and wait for our data to return
             In this method we are using the requests package to make a simple synchronous API call
             The code is blocked until the response is received.
-        :param city:
+        :param lon:
+        :param lat:
         :param units:
         :param appid:
-
         :param query: Contains query parameters for the request
         :return:
         """
@@ -88,7 +90,7 @@ class Weather:
         try:
             # Format the URL from the main weather URL plus the query/queries
             link = 'https://api.openweathermap.org'
-            URL = f"{link}{query}?q={city}&units={units}&appid={appid}"
+            URL = f"{link}{query}?lat={lat}&lon={lon}&units={units}&appid={appid}"
             # make the request
             r = requests.get(url=URL)
             # Raise the status to make sure it was successful. If it is not the below exception will occur

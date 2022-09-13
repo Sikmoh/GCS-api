@@ -141,7 +141,7 @@ def create_server(host, port):
     return gcs_server
 
 
-gcs = create_server('192.168.247.223', 9999)
+gcs = create_server('192.168.163.223', 9999)
 
 # code below is executed in a different script, its just here for reference
 # gcs_server = create_server('127.0.0.1', 9999, 1)
