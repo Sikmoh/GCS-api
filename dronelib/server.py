@@ -2,7 +2,6 @@
 # -------------------------------------------------
 import socket
 import sys
-import tqdm
 import os
 
 
@@ -59,7 +58,7 @@ class ServerInit:
         for x in self.all_addresses:
             for i in self.all_connections:
                 n, a = x
-                add = n.partition('192.168.247.')[-1]
+                add = n.partition('192.168.0.')[-1]
                 self.new[add] = i
 
 
@@ -114,34 +113,13 @@ class RunServer(ServerInit):
         except:
             print("Selection not valid")
 
-    def upload_path(self):
-        BUFFER_SIZE = 5048576  # 5MB
-        filename = "C:/Users/SIKIRU/Desktop/Droneproject/Groundstationapp/uploads/paths.json"
-        filesize = os.path.getsize(filename)
-        for i in self.all_connections:
-            progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
-            with open(filename, "rb") as f:
-                while True:
-                    # read the bytes from the file
-                    bytes_read = f.read(BUFFER_SIZE)
-                    if not bytes_read:
-                        # file transmitting is done
-                        break
-                    # we use sendall to assure transmission in
-                    # busy networks
-                    i.sendall(bytes_read)
-                    # update the progress bar
-                    progress.update(len(bytes_read))
-
-            f.close()
-
 
 def create_server(host, port):
     gcs_server = RunServer(host, port)
     return gcs_server
 
 
-gcs = create_server('192.168.163.223', 9999)
+gcs = create_server('192.168.0.100', 9999)
 
 # code below is executed in a different script, its just here for reference
 # gcs_server = create_server('127.0.0.1', 9999, 1)

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div >
+
+        {% if data   %}
+            {% for value in data %}
+
+            <ul style="display: inline-block;  list-style: none;  padding: 0; background-color:powderblue; width: 120px; border: 1px solid red; margin: 2px; ">
+
+              <li style="padding:2px; font-size: 1em; color: black; font-family: monospace;">id:{{value['id']}}</li>
+              <li style="padding:2px; font-size: 1em; color: black; font-family: monospace;">gps:{{value['GPS']}}</li>
+              <li style="padding:2px; font-size: 1em; color: black; font-family: monospace;">alt:{{value['Altitude']}}</li>
+              <li style="padding:2px; font-size: 1em; color: black; font-family: monospace;">mode:{{value['Vehicle-mode']}}</li>
+
+            </ul>
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>
+
+
+<!--with open('telemetry.json', 'w') as f:-->
+<!--        #     json.dump(tele, f)-->

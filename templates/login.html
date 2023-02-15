@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title> Aerolab GCS </title>
+		<link rel="stylesheet" href="C:\Users\SIKIRU\Desktop\GCSA\static\style.css">
+	</head>
+	<body></br></br></br></br></br>
+		<div align="center">
+		<div align="center" class="border">
+			<div>
+				<h1 class="word">Login</h1>
+			</div></br></br></br>
+			<h2 class="word">
+				<form name="login" action=" " method="post" onsubmit="login()">
+				<div class="msg">{{ msg }}</div>
+					<input id="username" name="username" type="text" placeholder="Enter Your Username" class="textbox"/></br></br>
+					<input id="password" name="password" type="password" placeholder="Enter Your Password" class="textbox"/></br></br></br>
+					<input type="submit" class="btn" value="Sign In"></br></br>
+				</form>
+			</h2>
+			<p class="bottom">Dont't have an account? <a class="bottom" href="GCSA/templates/register.html"> Sign Up here</a></p>
+		</div>
+		</div>
+	</body>
+<script >
+	async function login(){
+    let login_details = {
+        let x = document.forms['login']['username'].value;
+        let y = document.forms['login']['password'].value;
+        if(x == ""){
+        alert("username must be filled")
+        return false;
+        }
+
+    }
+    let options = {
+        method: 'POST',
+        headers: {
+            'Content-Type':
+                'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(login_details)
+    }
+    const response = await fetch("http://192.168.247.223:5000/login", options);
+    var res = await response.json()
+    console.log(res)
+}
+
+</script>
+</html>

@@ -189,7 +189,7 @@ class UserDacc(object):
                                    payload_claim={'email_claim': user['email']})
 
         params = {'token': token}
-        verification_url = f"{request.url_root}/email_verification?" + urllib.parse.urlencode(params)
+        verification_url = f"{request.url_root}/api/v1/email_verification?" + urllib.parse.urlencode(params)
 
         message_body = f"""Please verify account for {user['email']} by clicking on the following link:
             {verification_url}

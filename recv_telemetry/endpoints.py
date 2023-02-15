@@ -1,17 +1,24 @@
 from flask import request
 from auth.core import permission
 from basehandler import api_response
-telemetry = [{"id": 101, "GPS": 10, "Battery": "15 volts", "EKFok": "Yes", "Altitude": 10, "Vehiclemode": 'GUIDED'},
-             {"id": 102, "GPS": 12, "Battery": "16 volts", "EKFok": "Yes", "Altitude": 15, "Vehiclemode": 'GUIDED'},
-             {"id": 103, "GPS": 10, "Battery": "14.5 volts", "EKFok": "Yes", "Altitude": 40, "Vehiclemode": 'GUIDED'},
-             {"id": 104, "GPS": 5, "Battery": "13 volts", "EKFok": "Yes", "Altitude": 20, "Vehiclemode": 'GUIDED'}]
+from uploads.config import drone
+
+telemetry = []
 
 
+# {"id": 101, "GPS": 'GPSInfo:fix=3,num_sat=10', "Battery": "Battery:voltage=14.538,current=3.48,level=95", "EKFok": "Yes", "Altitude": 10, "Vehiclemode": 'GUIDED',
+# 'location': [-0.205874,5.614818]},
+
+# {"id": 102, "GPS": 'GPSInfo:fix=3,num_sat=10', "Battery": "Battery:voltage=12.538,current=3.48,level=99", "EKFok": "Yes", "Altitude": 15, "Vehiclemode": 'GUIDED',
+# 'location': [-0.215874, 5.614818]}
 def recv_telemetry():
     telemetry.clear()
+    # tele = request.get_json()
+
+    #if len(telemetry) != drone['number']:
     tele = request.get_json()
     telemetry.append(tele)
-    print(telemetry)
+    #else:
     return 'ok'
 
 

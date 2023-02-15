@@ -4,10 +4,11 @@ from flask import request
 from werkzeug.utils import secure_filename
 from auth.core import permission
 from basehandler import api_response
+#'C:/Users/SIKIRU/Desktop/GCSA/uploads'
+UPLOAD_FOLDER = 'C:/Users/SIKIRU/Desktop/GCSA/uploads'                 #'/app/uploads/'
 
-UPLOAD_FOLDER = 'C:/Users/SIKIRU/Desktop/GCSA/uploads'
-
-DOWNLOAD_FOLDER = 'C:/Users/SIKIRU/Desktop/GCSA/uploads/paths.json'
+#'C:/Users/SIKIRU/Desktop/GCSA/uploads/paths.json'
+DOWNLOAD_FOLDER = 'C:/Users/SIKIRU/Desktop/GCSA/uploads/paths.json' #'/app/uploads/paths.json'   #'/uploads/paths.json'
 ALLOWED_EXTENSIONS = {'json', 'py'}
 
 
@@ -18,7 +19,7 @@ def allowed_file(filename):
 
 def upload(**kwargs):
     permission(kwargs['token_info'], access_role='basic')
-    file = request.files['fileName']
+    file = request.files['file']
     # # If the user does not select a file, the browser submits an
     # # empty file without a filename.
     if file.filename == '':
@@ -38,3 +39,6 @@ def download():
     with open(file, 'rb') as f:
         data = json.load(f)
         return api_response(data)
+
+
+

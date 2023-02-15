@@ -45,14 +45,14 @@ JWT_EMAIL_HOURS = 1
 
 
 MYSQL = {
-    'host': "localhost",
+    'host': "localhost",  # 'localhost' #aerolab-mysql
     'user': "root",
     'password': "00Apassword7",
     'database': "aerolab"
 }
 
 REDIS = {
-    "host": "localhost",
+    "host": "localhost",  # 'localhost' #aerolab-redis
     'port': "6379",
     'db': "0",
     'password': "redisrocker"}
@@ -61,5 +61,5 @@ SMTP = {
     "host": "smtp-mail.outlook.com",
     "port": 587,
     "sender_email": "mohsikiru@outlook.com",
-    "sender_password": "Mr93Bean///"
+    "sender_password": "MR93BEAN//93"
 }

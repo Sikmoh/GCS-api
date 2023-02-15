@@ -16,7 +16,7 @@ paths:
   # Drone paths - REQUESTS
   # -----------------------------------------------
 
-  /api/v1/connect:
+  /connect:
     post:
       summary: Start socket server
       tags:
@@ -54,7 +54,7 @@ paths:
         - jwt: [ ]
 
 
-  /api/v1/command:
+  /command:
     post:
       summary: Send command to drone
       tags:
@@ -91,45 +91,8 @@ paths:
       security:
         - jwt: [ ]
 
-  /api/v1/take_off:
-    post:
-      summary: Send command to drone
-      tags:
-        - Command
-      description: >
-        Required Headers:
 
-          Authorization request header
-
-            Bearer Valid Basic Access Token
-
-        Errors:
-
-          token-invalid, 401
-          authorisation-required, 401
-          not-found, 404
-
-      operationId: command.endpoints.take_off
-      requestBody:
-        description: Command Data
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Commands"
-
-      responses:
-        "200":
-          description: Sends command to the drones
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SuccessResponse"
-
-      security:
-        - jwt: [ ]
-
-
-  /api/v1/select_drone:
+  /select_drone:
     post:
       summary: Send command to drone
       tags:
@@ -166,7 +129,7 @@ paths:
       security:
         - jwt: [ ]
 
-  /api/v1/all_drones:
+  /all_drones:
     get:
       summary: Returns the number of drones connected to the server
       tags:
@@ -198,7 +161,7 @@ paths:
       security:
         - jwt: [ ]
 
-  /api/v1/recv_telemetry:
+  /recv_telemetry:
     post:
       summary: Returns a list of telemetry data from drones
       tags:
@@ -219,7 +182,7 @@ paths:
 
 
 
-  /api/v1/read_telemetry:
+  /read_telemetry:
     get:
       summary: Returns a list of telemetry data from drones
       tags:
@@ -249,7 +212,7 @@ paths:
       security:
         - jwt: [ ]
 
-  /api/v1/upload:
+  /upload:
     post:
       summary: Uploads a file
       tags:
@@ -274,10 +237,9 @@ paths:
             schema:
               type: object
               properties:
-                file:
+                fileName:
                   type: string
                   format: binary
-
 
       responses:
         "200":
@@ -291,7 +253,7 @@ paths:
         - jwt: [ ]
 
 
-  /api/v1/download:
+  /download:
     get:
       summary: Downloads json path file
       tags:
@@ -317,7 +279,7 @@ paths:
 
 
 
-  /api/v1/signup:
+  /signup:
     post:
       summary: Create a new user
       tags:
@@ -347,7 +309,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SuccessResponse"
 
-  /api/v1/login:
+  /login:
     post:
       summary: Login with users credentials
       tags:
@@ -378,7 +340,7 @@ paths:
                 $ref: "#/components/schemas/UserLoginResponse"
 
 
-  /api/v1/logout:
+  /logout:
     post:
       summary: Logout
       tags:
@@ -409,7 +371,7 @@ paths:
       security:
         - jwt: [ ]
 
-  /api/v1/email_verification:
+  /email_verification:
     get:
       summary: Verifies user's email
       tags:
@@ -437,7 +399,7 @@ paths:
         "200":
           description: Returns OK
 
-  /api/v1/generate_tokens:
+  /generate_tokens:
     get:
       summary: Generates new user access and refresh tokens
       tags:
@@ -474,7 +436,7 @@ paths:
       security:
         - jwt_refresh: [ ]
 
-  /api/v1/weather:
+  /weather:
     get:
       summary: Get weather info
       tags:
@@ -679,7 +641,7 @@ components:
         password:
           description: Password
           type: string
-          pattern: (?=\S{8,32})(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[0-9])(?=\S*)(?<!\S)\S{8,32}(?=\s|\Z)
+#          pattern: (?=\S{8,32})(?=\S*[A-Z])(?=\S*[a-z])(?=\S*[0-9])(?=\S*)(?<!\S)\S{8,32}(?=\s|\Z)
 
     UserLoginResponse:
       type: object

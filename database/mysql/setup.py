@@ -29,6 +29,25 @@ def user_model():
            "CONSTRAINT UC_user UNIQUE (id,email,password))"
 
 
+def check_table_exists(db_connection):
+    """
+            Check if the user table for the database is already created
+        :param db_connection: The active connection to our database
+        :return:
+        """
+    try:
+        with db_connection.cursor() as cur:
+            cur.execute("""
+        SELECT COUNT(*) as TotalNumberOfTablesInaerolab
+        FROM information_schema.tables where table_schema='aerolab'
+        and table_name = 'users'
+        """)
+            if cur.fetchone()[0] == 1:
+                return True
+    except Exception as e:
+        raise ApiError("checking table error", 500)
+
+
 def create_user_table(db_connection):
     """
         Create the user table for the database
@@ -38,9 +57,13 @@ def create_user_table(db_connection):
     try:
         with db_connection.cursor() as cur:
             user = user_model()
+            check_table = check_table_exists(db_connection)
             create_users = "CREATE TABLE users " + user
-            cur.execute(create_users)
-            db_connection.commit()
+            if not check_table:
+                cur.execute(create_users)
+                db_connection.commit()
+            else:
+                pass
     except Exception as e:
         raise ApiError("User table creation error", 500)
 
